@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-api-deployment
+  labels:
+    app: docker-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: docker-api
+  template:
+    metadata:
+      labels:
+        app: docker-api
+    spec:
+      containers:
+        - name: "docker-api_myapi"
+          image: "docker-api_myapi"
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8009
+          env:
+            - name: db_root_password
+              valueFrom:
+                secretKeyRef:
+                  name: flaskapi-secrets
+                  key: db_root_password
+            - name: db_name
+              value: docker-api_myapi
